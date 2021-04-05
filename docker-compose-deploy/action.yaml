@@ -20,5 +20,5 @@ runs:
       shell: bash
     - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
       shell: bash
-    - run: docker network connect ${{ inputs.STACK_NAME }} nginx-proxy
+    - run: docker network connect ${{ inputs.STACK_NAME }} nginx-proxy || true
       shell: bash
