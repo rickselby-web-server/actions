@@ -1,0 +1,24 @@
+name: Docker Compose Deploy
+description: Deploy to the remote server using docker-compose
+inputs:
+  COMPOSE_FILE_PATH:
+    description: The path to the compose file to use for deployment
+    required: true
+    default: docker-compose.yml
+  STACK_NAME:
+    description: Name of the stack to create
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: ARGS="-f ${{ inputs.COMPOSE_FILE_PATH }} -p ${{ inputs.STACK_NAME }}"
+      shell: bash
+    - run: docker-compose $ARGS build --pull
+      shell: bash
+    - run: docker-compose $ARGS pull
+      shell: bash
+    - run: docker-compose $ARGS up -d --remove-orphans
+      shell: bash
+    - run: docker network connect ${{ inputs.STACK_NAME }} nginx-proxy
+      shell: bash
