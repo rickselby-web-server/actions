@@ -12,13 +12,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: ARGS="-f ${{ inputs.COMPOSE_FILE_PATH }} -p ${{ inputs.STACK_NAME }}"
+    - run: echo "ARGS=-f ${{ inputs.COMPOSE_FILE_PATH }} -p ${{ inputs.STACK_NAME }}" >> $GITHUB_ENV
       shell: bash
-    - run: docker-compose $ARGS build --pull
+    - run: docker-compose ${{ env.ARGS }} build --pull
       shell: bash
-    - run: docker-compose $ARGS pull
+    - run: docker-compose ${{ env.ARGS }} pull
       shell: bash
-    - run: docker-compose $ARGS up -d --remove-orphans
+    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
       shell: bash
     - run: docker network connect ${{ inputs.STACK_NAME }} nginx-proxy
       shell: bash
