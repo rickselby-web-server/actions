@@ -4,7 +4,7 @@ inputs:
   COMPOSE_FILE_PATH:
     description: The path to the compose file to use for deployment
     required: true
-    default: docker-compose.yaml
+    default: docker-compose.yml
   DOCKER_CERT_PATH:
     description: DOCKER_CERT_PATH
     required: true
