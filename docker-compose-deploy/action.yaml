@@ -8,11 +8,17 @@ inputs:
   STACK_NAME:
     description: Name of the stack to create
     required: true
+  DOCKER_CERT_PATH:
+    description: DOCKER_CERT_PATH
+    required: true
+    default: certs
 
 runs:
   using: "composite"
   steps:
     - run: echo "ARGS=-f ${{ inputs.COMPOSE_FILE_PATH }} -p ${{ inputs.STACK_NAME }}" >> $GITHUB_ENV
+      shell: bash
+    - run: echo "DOCKER_CERT_PATH=${{ inputs.DOCKER_CERT_PATH }}" >> $GITHUB_ENV
       shell: bash
     - run: docker-compose ${{ env.ARGS }} build --pull
       shell: bash
