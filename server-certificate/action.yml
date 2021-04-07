@@ -12,7 +12,7 @@ inputs:
     required: true
   DOCKER_CERT_PATH:
     description: DOCKER_CERT_PATH
-    required: true
+    required: false
     default: certs
 
 runs:
