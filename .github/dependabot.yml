@@ -4,6 +4,7 @@ updates:
     directory: docker-compose-deploy
     schedule:
       interval: weekly
+
   - package-ecosystem: github-actions
     directory: server-certificate
     schedule:
