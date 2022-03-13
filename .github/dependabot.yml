@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: docker-compose-deploy
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: server-certificate
+    schedule:
+      interval: weekly
