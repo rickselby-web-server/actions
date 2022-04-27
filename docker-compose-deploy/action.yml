@@ -16,6 +16,10 @@ inputs:
   STACK_NAME:
     description: Name of the stack to create
     required: true
+  KEEP_NETWORKS:
+    description: Ensure these containers stay in their networks
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -24,14 +28,26 @@ runs:
       shell: bash
     - run: echo "DOCKER_CERT_PATH=${{ inputs.DOCKER_CERT_PATH }}" >> $GITHUB_ENV
       shell: bash
-    - run: docker-compose ${{ env.ARGS }} build --pull
+
+    - run: |
+        for c in ${{ inputs.KEEP_NETWORKS }} ; do
+          echo "NETWORKS_$(echo ${c^^} | tr - _)="$(docker inspect $(docker-compose ps -q $c) -f "{{ range .NetworkSettings.Networks }} {{ .NetworkID }} {{ end }}")"" >> $GITHUB_ENV
+        done
+        for c in ${{ inputs.KEEP_NETWORKS }} ; do
+          varname="NETWORKS_$(echo ${c^^} | tr - _ )"
+          echo ${!varname}
+        done
+      if: ${{ inputs.KEEP_NETWORKS != '' }}
       shell: bash
-    - run: docker-compose ${{ env.ARGS }} pull
-      shell: bash
-    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
-      shell: bash
-    - run: ${{ github.action_path }}/network-connect.sh
-      env:
-        STACK_NAME: ${{ inputs.STACK_NAME }}
-        CONTAINERS: ${{ inputs.CONNECT_CONTAINERS }}
-      shell: bash
+
+#    - run: docker-compose ${{ env.ARGS }} build --pull
+#      shell: bash
+#    - run: docker-compose ${{ env.ARGS }} pull
+#      shell: bash
+#    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
+#      shell: bash
+#    - run: ${{ github.action_path }}/network-connect.sh
+#      env:
+#        STACK_NAME: ${{ inputs.STACK_NAME }}
+#        CONTAINERS: ${{ inputs.CONNECT_CONTAINERS }}
+#      shell: bash
