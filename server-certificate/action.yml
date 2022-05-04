@@ -1,15 +1,6 @@
 name: Set up certificate for remote docker server
 description: Set up certificate for remote docker server
 inputs:
-  CA:
-    description: CA
-    required: true
-  CLIENT_CERT:
-    description: CLIENT_CERT
-    required: true
-  CLIENT_KEY:
-    description: CLIENT_KEY
-    required: true
   DOCKER_CERT_PATH:
     description: DOCKER_CERT_PATH
     required: false
@@ -20,9 +11,9 @@ runs:
   steps:
     - run: mkdir ${{ inputs.DOCKER_CERT_PATH }}
       shell: bash
-    - run: echo "${{ inputs.CA }}" > ${{ inputs.DOCKER_CERT_PATH }}/ca.pem
+    - run: echo "${{ secrets.CA }}" > ${{ inputs.DOCKER_CERT_PATH }}/ca.pem
       shell: bash
-    - run: echo "${{ inputs.CLIENT_CERT }}" > ${{ inputs.DOCKER_CERT_PATH }}/cert.pem
+    - run: echo "${{ secrets.CLIENT_CERT }}" > ${{ inputs.DOCKER_CERT_PATH }}/cert.pem
       shell: bash
-    - run: echo "${{ inputs.CLIENT_KEY }}" > ${{ inputs.DOCKER_CERT_PATH }}/key.pem
+    - run: echo "${{ secrets.CLIENT_KEY }}" > ${{ inputs.DOCKER_CERT_PATH }}/key.pem
       shell: bash
