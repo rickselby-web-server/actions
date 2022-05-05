@@ -48,6 +48,7 @@ runs:
     - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           varname="NETWORKS_$(echo ${c^^} | tr - _ )"
+          set -x
           for n in ${!varname} ; do
             docker network connect ${n} ${c} || true        
           done        
