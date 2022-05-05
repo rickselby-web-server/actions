@@ -33,6 +33,9 @@ runs:
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           echo "NETWORKS_$(echo ${c^^} | tr - _)="$(docker inspect $(docker-compose ps -q $c) -f "{{ range .NetworkSettings.Networks }} {{ .NetworkID }} {{ end }}")"" >> $GITHUB_ENV
         done
+      if: ${{ inputs.KEEP_NETWORKS != '' }}
+      shell: bash
+    - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           varname="NETWORKS_$(echo ${c^^} | tr - _ )"
           echo ${!varname}
