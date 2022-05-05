@@ -28,32 +28,29 @@ runs:
       shell: bash
     - run: echo "DOCKER_CERT_PATH=${{ inputs.DOCKER_CERT_PATH }}" >> $GITHUB_ENV
       shell: bash
-
     - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           echo "NETWORKS_$(echo ${c^^} | tr - _)="$(docker inspect $(docker-compose ps -q $c) -f "{{ range .NetworkSettings.Networks }} {{ .NetworkID }} {{ end }}")"" >> $GITHUB_ENV
         done
       if: ${{ inputs.KEEP_NETWORKS != '' }}
       shell: bash
+    - run: docker-compose ${{ env.ARGS }} build --pull
+      shell: bash
+    - run: docker-compose ${{ env.ARGS }} pull
+      shell: bash
+    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
+      shell: bash
+    - run: ${{ github.action_path }}/network-connect.sh
+      env:
+        STACK_NAME: ${{ inputs.STACK_NAME }}
+        CONTAINERS: ${{ inputs.CONNECT_CONTAINERS }}
+      shell: bash
     - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           varname="NETWORKS_$(echo ${c^^} | tr - _ )"
-          set -x
           for n in ${!varname} ; do
             docker network connect ${n} ${c} || true        
           done        
         done
       if: ${{ inputs.KEEP_NETWORKS != '' }}
       shell: bash
-
-#    - run: docker-compose ${{ env.ARGS }} build --pull
-#      shell: bash
-#    - run: docker-compose ${{ env.ARGS }} pull
-#      shell: bash
-#    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
-#      shell: bash
-#    - run: ${{ github.action_path }}/network-connect.sh
-#      env:
-#        STACK_NAME: ${{ inputs.STACK_NAME }}
-#        CONTAINERS: ${{ inputs.CONNECT_CONTAINERS }}
-#      shell: bash
