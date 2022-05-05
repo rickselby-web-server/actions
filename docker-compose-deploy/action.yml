@@ -38,7 +38,7 @@ runs:
     - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
           varname="NETWORKS_$(echo ${c^^} | tr - _ )"
-          echo ${!varname}
+          docker network connect ${!varname} $c || true
         done
       if: ${{ inputs.KEEP_NETWORKS != '' }}
       shell: bash
