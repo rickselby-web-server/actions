@@ -4,8 +4,14 @@ updates:
     directory: docker-compose-deploy
     schedule:
       interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: "Europe/London"
 
   - package-ecosystem: github-actions
     directory: server-certificate
     schedule:
       interval: weekly
+      day: saturday
+      time: "08:00"
+      timezone: "Europe/London"
