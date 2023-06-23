@@ -1,6 +1,7 @@
 #!/bin/bash
 
 [ -z "$CONTAINERS" ] && exit 0
+set -x
 
 for CONTAINER in $(echo $CONTAINERS | sed "s/,/ /g")
 do
