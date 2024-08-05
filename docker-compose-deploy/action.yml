@@ -1,5 +1,5 @@
 name: Docker Compose Deploy
-description: Deploy to the remote server using docker-compose
+description: Deploy to the remote server using docker compose
 inputs:
   COMPOSE_FILE_PATH:
     description: The path to the compose file to use for deployment
@@ -30,15 +30,15 @@ runs:
       shell: bash
     - run: |
         for c in ${{ inputs.KEEP_NETWORKS }} ; do
-          echo "NETWORKS_$(echo ${c^^} | tr - _)="$(docker inspect $(docker-compose ps -q $c) -f "{{ range .NetworkSettings.Networks }} {{ .NetworkID }} {{ end }}")"" >> $GITHUB_ENV
+          echo "NETWORKS_$(echo ${c^^} | tr - _)="$(docker inspect $(docker compose ps -q $c) -f "{{ range .NetworkSettings.Networks }} {{ .NetworkID }} {{ end }}")"" >> $GITHUB_ENV
         done
       if: ${{ inputs.KEEP_NETWORKS != '' }}
       shell: bash
-    - run: docker-compose ${{ env.ARGS }} build --pull
+    - run: docker compose ${{ env.ARGS }} build --pull
       shell: bash
-    - run: docker-compose ${{ env.ARGS }} pull
+    - run: docker compose ${{ env.ARGS }} pull
       shell: bash
-    - run: docker-compose ${{ env.ARGS }} up -d --remove-orphans
+    - run: docker compose ${{ env.ARGS }} up -d --remove-orphans
       shell: bash
     - run: ${{ github.action_path }}/network-connect.sh
       env:
