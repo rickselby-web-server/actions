@@ -36,7 +36,7 @@ runs:
       shell: bash
     - run: docker compose ${{ env.ARGS }} build --pull
       shell: bash
-    - run: docker compose ${{ env.ARGS }} pull
+    - run: docker compose ${{ env.ARGS }} pull --ignore-buildable
       shell: bash
     - run: docker compose ${{ env.ARGS }} up -d --remove-orphans
       shell: bash
